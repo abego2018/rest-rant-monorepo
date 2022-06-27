@@ -21,4 +21,19 @@ router.post('/', async(req, res) => {
     console.log('user', user)
 })
 
+
+router.get('/profile', async (req, res) => {
+    console.log('profile page')
+    // try {
+    //     let user = await User.findOne({
+    //         where: {
+    //             userId:
+    //         }
+    //     })
+    //     res.json(user)
+    // } catch {
+    //     res.json(null)
+    // }
+})
+
 module.exports = router
