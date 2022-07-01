@@ -18,7 +18,7 @@ router.post('/', async(req, res) => {
     }
     else {
 
-        const result = await jwt.ecnode(process.env.JWT_SECRET, { id: user.userId })
+        const result = await jwt.encode(process.env.JWT_SECRET, { id: user.userId })
         res.json({ user: user, token: result.value })
     }
 
@@ -26,16 +26,30 @@ router.post('/', async(req, res) => {
 })
 
 router.get('/profile', async (req, res) => {
-    // try {
-    //     let user = await User.findOne({
-    //         where: {
-    //             userId:  
-    //         }
-    //     })
-    //     res.json(user)
-    // } catch {
-    //     res.json(null)
-    // }
+    try {
+        //Split the authorization header into ("Bearer", "token"):
+        const [authenticationMethod, token] = req.headers.authorization.split(' ')
+
+        // Only handle "Bearer" authhorization for now
+        //we could add other authorization strategies later"
+        if (authenticationMethod == 'Bearer'){
+
+            //decode JWT
+            const result = await jwt.decode(process.env.JWT_SECRET, token)
+
+            //get the logged in user's id from the payload
+            const { id } = result.value
+            let user = await User.findOne({
+                where: {
+                  userId:  id
+                  }
+              })
+           res.json(user)
+        }
+        
+    } catch {
+        res.json(null)
+    }
 })
 
 
