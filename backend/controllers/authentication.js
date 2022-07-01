@@ -11,7 +11,7 @@ router.post('/', async(req, res) => {
         where: { email: req.body.email }
     })
     //404 message not popping up
-    if ( user || await bcrypt.compare(req.body.password, userpasswordDigest)) {
+    if ( !user || !await bcrypt.compare(req.body.password, user.passwordDigest)) {
         res.status(404).json({
             message: 'Could not find a user with the provided username and password'
         })
